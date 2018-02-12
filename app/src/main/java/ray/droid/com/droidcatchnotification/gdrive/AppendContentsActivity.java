@@ -73,7 +73,7 @@ public class AppendContentsActivity extends BaseDemoActivity {
                                                 else {
                                                     Intent mIntent = new Intent(getBaseContext(), CreateFileActivity.class);
                                                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    String msg = getIntent().getStringExtra(DroidConstantes.MESSAGE);
+                                                    String msg =  getIntent().getStringExtra(DroidConstantes.MESSAGE);
                                                     mIntent.putExtra(DroidConstantes.MESSAGE, msg);
                                                     startActivity(mIntent);
 
@@ -121,6 +121,8 @@ public class AppendContentsActivity extends BaseDemoActivity {
                         }
                         try (OutputStream out = new FileOutputStream(pfd.getFileDescriptor())) {
                             String msg = getIntent().getStringExtra(DroidConstantes.MESSAGE);
+
+                            out.write('\n');
                             out.write(msg.getBytes());
                         }
                         // [START commit_contents_with_metadata]
