@@ -16,14 +16,17 @@
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".gdrive.CreateFileActivity"
-            android:theme="@style/TranslucentTheme"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"
+            android:theme="@style/TranslucentTheme"></activity>
+        <activity
+            android:name=".gdrive.AppendContentsActivity"
+            android:theme="@style/TranslucentTheme" />
+
         <service
             android:name=".notification.DroidNotification"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
