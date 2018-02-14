@@ -14,6 +14,7 @@
 
 package ray.droid.com.droidcatchnotification.gdrive;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
@@ -21,12 +22,8 @@ import android.util.Log;
 
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.MetadataBuffer;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.Query;
-import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,17 +36,62 @@ import java.io.OutputStream;
 import java.util.Date;
 
 import ray.droid.com.droidcatchnotification.R;
-import ray.droid.com.droidcatchnotification.common.DroidConstantes;
-import ray.droid.com.droidcatchnotification.common.DroidMethods;
+import ray.droid.com.droidcatchnotification.common.DroidCommon;
 
 /**
  * An activity to illustrate how to edit contents of a Drive file.
  */
 public class AppendContentsActivity extends BaseDemoActivity {
     private static final String TAG = "AppendContentsActivity";
+    private Context context;
+
 
     @Override
     protected void onDriveClientReady() {
+
+        context = getBaseContext();
+
+        DriveFile driveFile = DroidCommon.GetDriveFile(context);
+
+        if ( driveFile == null)
+        {
+            Intent mIntent = new Intent(context, CreateFileActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //mIntent.putExtra(DroidConstantes.MESSAGE, "Inicial");
+            getBaseContext().startActivity(mIntent);
+
+        }
+        else  {
+            appendContents(driveFile);
+
+            /*
+            Task<Metadata> getMetadataTask = getDriveResourceClient().getMetadata(driveFile);
+            getMetadataTask
+                    .addOnSuccessListener(this,
+                            new OnSuccessListener<Metadata>() {
+                                @Override
+                                public void onSuccess(Metadata metadata) {
+                                    showMessage(getString(
+                                            R.string.metadata_retrieved, metadata.getTitle()));
+                                    finish();
+                                }
+                            })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "Unable to retrieve metadata", e);
+                            showMessage(getString(R.string.read_failed));
+                            finish();
+                        }
+                    });
+
+*/
+
+
+
+        }
+
+        /*
 
             // [START query_title]
             Query query = new Query.Builder()
@@ -90,16 +132,15 @@ public class AppendContentsActivity extends BaseDemoActivity {
                             .addOnFailureListener(this, new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
-
+                                    Log.e(TAG, "Failure Listener", e);
 
                                 }
                             });
+                            */
 
     }
 
     private void appendContents(DriveFile file) {
-
 
         // [START open_for_append]
         Task<DriveContents> openTask =
@@ -120,10 +161,10 @@ public class AppendContentsActivity extends BaseDemoActivity {
                             }
                         }
                         try (OutputStream out = new FileOutputStream(pfd.getFileDescriptor())) {
-                            String msg = getIntent().getStringExtra(DroidConstantes.MESSAGE);
+                         //   String msg = getIntent().getStringExtra(DroidConstantes.MESSAGE);
 
                             out.write('\n');
-                            out.write(msg.getBytes());
+                            out.write(DroidCommon.MESSAGE.getBytes());
                         }
                         // [START commit_contents_with_metadata]
                         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
@@ -134,6 +175,7 @@ public class AppendContentsActivity extends BaseDemoActivity {
                                 getDriveResourceClient().commitContents(driveContents, changeSet);
                         // [END commit_contents_with_metadata]
                         return commitTask;
+
                     }
                 })
                 .addOnSuccessListener(this,
@@ -153,5 +195,6 @@ public class AppendContentsActivity extends BaseDemoActivity {
                     }
                 });
         // [END append_contents]
+
     }
 }

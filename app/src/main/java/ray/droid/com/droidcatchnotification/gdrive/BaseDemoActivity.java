@@ -205,7 +205,7 @@ public abstract class BaseDemoActivity extends Activity {
      * Shows a toast message.
      */
     protected void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+       // Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -220,5 +220,7 @@ public abstract class BaseDemoActivity extends Activity {
     protected DriveResourceClient getDriveResourceClient() {
         return mDriveResourceClient;
     }
+
+
 }
 

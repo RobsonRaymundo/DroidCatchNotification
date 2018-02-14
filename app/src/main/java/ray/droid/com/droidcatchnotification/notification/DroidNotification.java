@@ -9,8 +9,7 @@ import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import ray.droid.com.droidcatchnotification.common.DroidConstantes;
-import ray.droid.com.droidcatchnotification.common.DroidMethods;
+import ray.droid.com.droidcatchnotification.common.DroidCommon;
 import ray.droid.com.droidcatchnotification.gdrive.AppendContentsActivity;
 
 import static ray.droid.com.droidcatchnotification.common.DroidCommon.TAG;
@@ -35,9 +34,12 @@ public class DroidNotification extends DroidBaseNotification {
 
             try {
 
+
+
                 Intent mIntent = new Intent(getBaseContext(), AppendContentsActivity.class);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mIntent.putExtra(DroidConstantes.MESSAGE, getDataNotification());
+           //     mIntent.putExtra(DroidConstantes.MESSAGE, getDataNotification());
+                DroidCommon.MESSAGE = getDataNotification();
                 startActivity(mIntent);
 
 
@@ -50,7 +52,7 @@ public class DroidNotification extends DroidBaseNotification {
     }
 
     private String getDataNotification() {
-        return DroidMethods.getTimeFormated() + " " + tit + " " + msg;
+        return DroidCommon.getDateTimeFormated() + " " + tit + " " + msg;
     }
 
 

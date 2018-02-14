@@ -14,6 +14,7 @@
 
 package ray.droid.com.droidcatchnotification.gdrive;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -32,14 +33,15 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import ray.droid.com.droidcatchnotification.R;
-import ray.droid.com.droidcatchnotification.common.DroidConstantes;
-import ray.droid.com.droidcatchnotification.common.DroidMethods;
+import ray.droid.com.droidcatchnotification.common.DroidCommon;
+import ray.droid.com.droidcatchnotification.common.DroidPreferences;
 
 /**
  * An activity to illustrate how to create a file.
  */
 public class CreateFileActivity extends BaseDemoActivity {
     private static final String TAG = "CreateFileActivity";
+    private Context context;
 
     @Override
     protected void onDriveClientReady() {
@@ -47,6 +49,7 @@ public class CreateFileActivity extends BaseDemoActivity {
     }
 
     private void createFile() {
+        context = getBaseContext();
         // [START create_file]
         final Task<DriveFolder> rootFolderTask = getDriveResourceClient().getRootFolder();
         final Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
@@ -57,16 +60,16 @@ public class CreateFileActivity extends BaseDemoActivity {
                         DriveFolder parent = rootFolderTask.getResult();
                         DriveContents contents = createContentsTask.getResult();
                         OutputStream outputStream = contents.getOutputStream();
-                        String msg = getIntent().getStringExtra(DroidConstantes.MESSAGE);
                         try (Writer writer = new OutputStreamWriter(outputStream)) {
 
-                            writer.write(msg);
+                            writer.write(DroidCommon.MESSAGE);
                         }
 
                         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                .setTitle(DroidMethods.getDateFormated() + ".txt")
+                                .setTitle("CatchNotification-" +DroidCommon.getNameDevice(context) + ".txt")
                                 .setMimeType("text/plain")
                                 .setStarred(true)
+
                                 .build();
 
                         return getDriveResourceClient().createFile(parent, changeSet, contents);
@@ -76,8 +79,9 @@ public class CreateFileActivity extends BaseDemoActivity {
                         new OnSuccessListener<DriveFile>() {
                             @Override
                             public void onSuccess(DriveFile driveFile) {
-                                showMessage(getString(R.string.file_created,
-                                        driveFile.getDriveId().encodeToString()));
+                                //    DroidCommon.SetDriveFile(driveFile);
+                                DroidPreferences.SetString(context, "DriveId", driveFile.getDriveId().encodeToString());
+                                showMessage(getString(R.string.file_created, driveFile.getDriveId().encodeToString()));
                                 finish();
                             }
                         })
@@ -90,5 +94,6 @@ public class CreateFileActivity extends BaseDemoActivity {
                     }
                 });
         // [END create_file]
+
     }
 }
