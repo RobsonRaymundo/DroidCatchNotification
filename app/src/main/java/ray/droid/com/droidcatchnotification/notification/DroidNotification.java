@@ -79,7 +79,7 @@ public class DroidNotification extends DroidBaseNotification {
                 msg = desc.toString();
             }
 
-            if (msg.equals("procurando novas mensagens")) {
+            if (msg.equals("procurando novas mensagens") || msg.equals("Checking for new messages")) {
                 tit = "";
                 msg = "";
             }
